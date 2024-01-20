@@ -14,17 +14,16 @@ class MeetingRoomCreate(MeetingRoomBase):
 
 class MeetingRoomUpdate(MeetingRoomBase):
     name: Optional[str] = Field(None, min_length=1, max_length=100)
-    
 
     @validator('name')
     def name_cant_be_none(cls, value: str):
         if value is None:
             raise ValueError('Имя переговорки не может быть пустым!')
-        return value 
+        return value
 
 
 class MeetingRoomDB(MeetingRoomCreate):
     id: int
 
     class Config:
-        orm_mode=True
+        orm_mode = True

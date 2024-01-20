@@ -11,14 +11,13 @@ class ReservationBase(BaseModel):
 class ReservationUpdate(ReservationBase):
 
     @validator('from_reserve')
-    def check_from_reserve_later_than_now(cls, value:datetime):
+    def check_from_reserve_later_than_now(cls, value: datetime):
         if value <= datetime.now():
             raise ValueError(
                 'Прошу прощения, но вряд ли '
                 'у вас в гараже "DeLorean DMC-12"'
             )
         return value
-    
 
     @root_validator(skip_on_failure=True)
     def check_from_reserve_before_to_reserve(cls, values: dict[str, datetime]):
@@ -39,4 +38,4 @@ class ReservationDB(ReservationBase):
     meetingroom_id: int
 
     class Config:
-        orm_mode=True
+        orm_mode = True
