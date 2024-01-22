@@ -1,6 +1,41 @@
 from datetime import datetime
+import pytz
 
 from pydantic import BaseModel, root_validator, validator, Extra
+
+
+def reservation_time():
+    tz = pytz.timezone('Europe/Moscow')
+    time_now = datetime.now(tz=tz)
+
+    year_month_day_format = '%Y-%m-%d'
+    hours_format = '%H'
+    minutes_format = '%M'
+
+    y_m_d = datetime.strftime(time_now, year_month_day_format)
+    hours = datetime.strftime(time_now, hours_format)
+    minutes = datetime.strftime(time_now, minutes_format)
+
+    hours_from_time = int(hours)
+    minutes_from_time = int(minutes) + 10
+    if minutes_from_time >= 60:
+        minutes_from_time = f'0{minutes_from_time - 60}'
+        hours_from_time += 1
+    from_time = f'{y_m_d}T{hours_from_time}:{minutes_from_time}'
+
+    hours_to_time = int(hours) + 1
+    if hours_to_time == 24:
+        hours_to_time = '00'
+    elif hours_to_time > 24:
+        hours_to_time = '01'
+    minutes_to_time = int(minutes)
+    to_time = f'{y_m_d}T{hours_to_time}:{minutes_to_time}'
+    result = {
+        'from_time': from_time,
+        'to_time': to_time
+        }
+
+    return result
 
 
 class ReservationBase(BaseModel):
@@ -10,11 +45,8 @@ class ReservationBase(BaseModel):
     class Config:
         extra = Extra.forbid
         schema_extra = {
-            'example': {
-                'from_time': '2028-04-24T11:00',
-                'to_time': '2028-04-24T12:00'
+            'example': reservation_time()
             }
-        }
 
 
 class ReservationUpdate(ReservationBase):
