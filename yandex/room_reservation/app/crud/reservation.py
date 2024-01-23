@@ -1,4 +1,5 @@
 from datetime import datetime
+import pytz
 
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -38,6 +39,26 @@ class CRUDReservation(CRUDBase):
         reservations = reservations.scalars().all()
         return reservations
 
+
+    async def get_future_reservations_for_room(
+            self,
+            room_id: int,
+            session: AsyncSession
+    ):
+        tz = pytz.timezone('Europe/Moscow')
+        time_now = datetime.now(tz=tz)
+        reservations = await session.execute(
+            select(Reservation).where(
+                Reservation.meetingroom_id == room_id,
+                Reservation.to_reserve > time_now
+                ))
+        reservations = reservations.scalars().all()
+        return reservations
+
+
+reservation_crud = CRUDReservation(Reservation)
+
+
     # async def get_reservations_at_the_same_time(
     #     self,
     #     from_reserve: datetime,
@@ -64,5 +85,3 @@ class CRUDReservation(CRUDBase):
     #   с логикой написания запросов
     #   в SQL таблицах
 
-
-reservation_crud = CRUDReservation(Reservation)

@@ -31,8 +31,9 @@ def reservation_time():
     minutes_to_time = int(minutes)
     to_time = f'{y_m_d}T{hours_to_time}:{minutes_to_time}'
     result = {
-        'from_time': from_time,
-        'to_time': to_time
+        'from_reserve': from_time,
+        'to_reserve': to_time,
+        'meetingroom_id': 0
         }
 
     return result
