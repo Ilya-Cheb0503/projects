@@ -1,6 +1,6 @@
-from fastapi_users_db_sqlalchemy import SQLAlchemyBaseOAuthAccountTable
+from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 
 from app.core.db import Base
 
-class User(SQLAlchemyBaseOAuthAccountTable[int], Base):
+class User(SQLAlchemyBaseUserTable[int], Base):
     pass

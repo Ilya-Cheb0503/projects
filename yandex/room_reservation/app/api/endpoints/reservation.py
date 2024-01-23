@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.user import current_superuser, current_user
+from app.models import User
 from app.crud.reservation import reservation_crud
 from app.schemas.reservation import (ReservationCreate,
                                      ReservationDB,
@@ -21,7 +23,8 @@ router = APIRouter()
     )
 async def create_reservation(
     reservation: ReservationCreate,
-    session: AsyncSession = Depends(get_async_session)
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_user),
 ):
     await check_meeting_room_exists(
         reservation.meetingroom_id, session
@@ -33,8 +36,8 @@ async def create_reservation(
     )
 
     new_reservation = await reservation_crud.create(
-        reservation,
-        session)
+        reservation, session, user
+        )
 
     return new_reservation
 
@@ -42,10 +45,12 @@ async def create_reservation(
 @router.get(
     '/',
     response_model=list[ReservationDB],
+    dependencies=[Depends(current_superuser)],
     )
 async def get_all_reservations(
     session: AsyncSession = Depends(get_async_session)
 ):
+    """Только для суперюзеров."""
     reservations = await reservation_crud.get_multi(session)
     return reservations
 

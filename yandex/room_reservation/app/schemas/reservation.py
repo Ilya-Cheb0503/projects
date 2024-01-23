@@ -3,6 +3,7 @@ import pytz
 
 from pydantic import BaseModel, root_validator, validator, Extra
 
+from typing import Optional
 
 def reservation_time():
     tz = pytz.timezone('Europe/Moscow')
@@ -78,6 +79,7 @@ class ReservationCreate(ReservationUpdate):
 class ReservationDB(ReservationBase):
     id: int
     meetingroom_id: int
+    user_id: Optional[int]
 
     class Config:
         orm_mode = True
