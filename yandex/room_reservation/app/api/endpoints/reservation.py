@@ -120,6 +120,6 @@ async def get_my_reservations(
     """Получает список всех бронирований для текущего пользователя."""
 
     reservations = await reservation_crud.get_by_user(
-        user.user_id, session
+        user.id, session
     )
     return reservations

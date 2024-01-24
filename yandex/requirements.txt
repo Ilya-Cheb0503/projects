@@ -2,7 +2,7 @@ aiosqlite==0.17.0
 alembic==1.7.7
 anyio==3.7.1
 asgiref==3.7.2
-bcrypt==4.1.2
+bcrypt==4.0.1
 cffi==1.16.0
 click==8.1.7
 colorama==0.4.6
